@@ -20,7 +20,7 @@ namespace DialogueBuilderWpf.Test
         {
             try
             {
-                File.Delete(MFileWriter.BuildJsonFilePath(Path.Combine(projectDir, projectName), projectName));
+                File.Delete(DataService.GetProjectJsonFilePath(Path.Combine(projectDir, projectName), projectName));
                 Directory.Delete(Path.Combine(projectDir, projectName));
             }
             catch (Exception){}
@@ -143,7 +143,7 @@ namespace DialogueBuilderWpf.Test
             {
                 DataService dataService = new DataService();
                 dataService.InitializeFromFile(Path.Combine(projectDir, projectName));
-                dataService.Save(new CsvSerilizer());
+                dataService.Save(new UeCsvSerilizer());
             }
             catch (Exception e)
             {

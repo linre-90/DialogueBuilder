@@ -29,6 +29,7 @@
                 </MenuItem>
                 <MenuItem Header="_Export">
                     <MenuItem Header="Csv(unreal)" Click="MenuItem_ExportUnrealCSV"/>
+                    <MenuItem Header="Csv" Click="MenuItem_ExportCsv"/>
                 </MenuItem>
                 <MenuItem Header="_Info">
                     <MenuItem Header="Help" Click="MenuItem_Info"/>

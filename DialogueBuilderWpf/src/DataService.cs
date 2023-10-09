@@ -20,15 +20,14 @@ namespace DialogueBuilderWpf.src
 
 
         public delegate void DataChangedEventHandler();
-
-        /// <summary>
-        /// Event is fired everytime some action is performed that modifies data and old data is no more relevant.
-        /// </summary>
         public event DataChangedEventHandler? DataChangeEvent;
 
-        /// <summary>
-        /// Creates new project with only root node.
-        /// </summary>
+
+        public static string GetProjectJsonFilePath(string projectDir, string projectName)
+        {
+            return Path.Combine(projectDir, $"{projectName}.json");
+        }
+
         public void InitializeNewProject(string folderPath)
         {
             this.Data = new DialogueTree(new Node("root"));
@@ -37,54 +36,23 @@ namespace DialogueBuilderWpf.src
             DataChangeEvent?.Invoke();
         }
 
-        /// <summary>
-        /// Loads project from existing json file that is read from disk.<br></br><br></br>
-        /// Triggers DataChangeEvent.
-        /// </summary>
-        /// <param name="folderPath"></param>
+
         public void InitializeFromFile(string folderPath)
         {
             this.ProjectDir = folderPath;
             this.ProjectName = new DirectoryInfo(folderPath).Name;
             MJsonSerializer jsonSerializer = new();
-            this.Data = jsonSerializer.DeserializeProject(MFileWriter.BuildJsonFilePath(ProjectDir, ProjectName));
+            this.Data = jsonSerializer.DeserializeProject(GetProjectJsonFilePath(ProjectDir, ProjectName));
             DataChangeEvent?.Invoke();
         }
 
-        /// <summary>
-        /// Get all children node UiId of parentUIiD named node.
-        /// </summary>
-        /// <param name="parentUiID"></param>
-        /// <returns></returns>
-        public List<string>? GetChildrenUiIds(string parentUiID) 
-        {
-            return Data!.GetNodeChildrenUIiDS(parentUiID);
-        }
+        public List<string>? GetChildrenUiIds(string parentUiID)  => Data!.GetNodeChildrenUIiDS(parentUiID);
 
-        /// <summary>
-        /// Find node where UiID matches.
-        /// </summary>
-        /// <param name="nodeUiID"></param>
-        /// <returns></returns>
-        public Node? FindNodeById(string nodeUiID)
-        {
-            return Data!.FindNodeById(nodeUiID);
-        }
 
-        /// <summary>
-        /// Save or export data with given ISerializer.
-        /// </summary>
-        /// <param name="serializer"></param>
-        public void Save(ISerializer serializer)
-        {
-            serializer.Serialize(ProjectDir!, ProjectName!, Data!.Root);
-        }
+        public Node? FindNodeById(string nodeUiID) => Data!.FindNodeById(nodeUiID);
 
-        /// <summary>
-        /// Create new node as the parentId node's child.<br></br><br></br>
-        /// Triggers DataChangeEvent.
-        /// </summary>
-        /// <param name="parentUiID"></param>
+        public void Save(ISerializer serializer) => serializer.Serialize(ProjectDir!, ProjectName!, Data!.Root);
+
         public void AddNewNodeToParent(string parentUiID)
         {
             Node? node = FindNodeById(parentUiID);
@@ -95,11 +63,6 @@ namespace DialogueBuilderWpf.src
             }
         }
 
-        /// <summary>
-        /// Delete node and all of its children.<br></br><br></br>
-        /// Triggers DataChangeEvent.
-        /// </summary>
-        /// <param name="targetUiID"></param>
         public void DeleteNodeBranch(string targetUiID)
         {
             Node? node = FindNodeById(targetUiID);
@@ -110,12 +73,6 @@ namespace DialogueBuilderWpf.src
             }
         }
 
-        /// <summary>
-        /// Update single node value.
-        /// Returns true on success, false if values cannot be updated. Root node UiID cannot be updated.<br></br><br></br>
-        /// Triggers DataChangeEvent.
-        /// </summary>
-        /// <param name="newValues"></param>
         public bool UpdateNodeValues(string targetNodeUiID, string id, string npcText, string tooltipText, string effect, string skillId, bool launchesPersuation)
         {
             Node? node = FindNodeById(targetNodeUiID);

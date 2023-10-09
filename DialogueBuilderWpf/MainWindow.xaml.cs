@@ -7,7 +7,6 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace DialogueBuilderWpf
@@ -17,7 +16,7 @@ namespace DialogueBuilderWpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        // Flah to identify when nodeEditor box is dragged.
+        // Flag to identify when nodeEditor box is dragged.
         bool isDragging = false;
 
         DataService? _dataService;
@@ -28,17 +27,12 @@ namespace DialogueBuilderWpf
         {
             InitializeComponent();
             _viewModel = new NodeEditorViewModel();
-            // Property window button clicks
+           
             property_updateBtn.Click += Property_updateBtn_Click;
             property_addChildBtn.Click += Property_addChildBtn_Click;
             property_deleteBtn.Click += Property_deleteBtn_Click;
         }
 
-        /// <summary>
-        /// Properties panel delete button logic.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Property_deleteBtn_Click(object sender, RoutedEventArgs e)
         {
             if (_dataService == null || string.IsNullOrEmpty(selectedNodeId))
@@ -62,11 +56,6 @@ namespace DialogueBuilderWpf
             }
         }
 
-        /// <summary>
-        /// Properties panel add child button logic.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Property_addChildBtn_Click(object sender, RoutedEventArgs e)
         {
             if (_dataService == null || string.IsNullOrEmpty(selectedNodeId))
@@ -78,11 +67,6 @@ namespace DialogueBuilderWpf
             _dataService!.AddNewNodeToParent(selectedNodeId);
         }
 
-        /// <summary>
-        /// Properties window update button.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Property_updateBtn_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -93,7 +77,6 @@ namespace DialogueBuilderWpf
                     return;
                 }
 
-                // Build new data to pass to data service
                 string id = string.IsNullOrEmpty(UI_uiID.Text) ? "" : UI_uiID.Text;
                 string npcTxt = string.IsNullOrEmpty(UI_npcText.Text) ? "" : UI_npcText.Text;
                 string tooltipTxt = string.IsNullOrEmpty(UI_tooltipText.Text) ? "" : UI_tooltipText.Text;
@@ -101,7 +84,6 @@ namespace DialogueBuilderWpf
                 string skillId = string.IsNullOrEmpty(UI_skillID.Text) ? "" : UI_skillID.Text;
                 bool invokeActivity = (UI_invokeActivity.IsChecked == true);
 
-                // Rename key in ui state
                 if(!selectedNodeId.Equals(id))
                 {
                     _viewModel.RenameKey(selectedNodeId, id);
@@ -122,11 +104,6 @@ namespace DialogueBuilderWpf
             }
         }
 
-        /// <summary>
-        /// Handle canvas mouse clicks. Selects canvas object to dragTarget. TextBlock name is nodes unique UIiD.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void nodeEditor_MouseDown(object sender, MouseButtonEventArgs e)
         {
             isDragging = e.Handled = true;
@@ -137,12 +114,6 @@ namespace DialogueBuilderWpf
             }
         }
 
-
-        /// <summary>
-        /// Stops draggin when mouse button is released or mouse leaves canvas.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void nodeEditor_MouseUp(object sender, MouseButtonEventArgs e) 
         {
             isDragging = false;
@@ -154,11 +125,6 @@ namespace DialogueBuilderWpf
             }
         }
 
-        /// <summary>
-        /// Canvas mouse movement
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void nodeEditor_MouseMove(object sender, MouseEventArgs e)
         {
             if (isDragging && sender is TextBlock t)
@@ -169,12 +135,7 @@ namespace DialogueBuilderWpf
             }
         }
 
-
-        /// <summary>
-        /// Open old project for editing.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /* Main entry to intialize program logic*/
         private void MenuItem_Open(object sender, RoutedEventArgs e)
         {
             try
@@ -197,11 +158,7 @@ namespace DialogueBuilderWpf
             }
         }
 
-        /// <summary>
-        /// Create new project with root node.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /* Main entry to intialize program logic*/
         private void MenuItem_Create(object sender, RoutedEventArgs e)
         {
             var folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -215,20 +172,12 @@ namespace DialogueBuilderWpf
             }
         }
 
-        /// <summary>
-        /// DataChangeEvent callback.
-        /// </summary>
         private void _dataService_DataChangeEvent()
         {
             _viewModel.UpdateUiState(_dataService!.Data!.Root);
             ReDrawNodeEditor();
         }
 
-        /// <summary>
-        /// Saves project to json node tree and visual placement tree.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void MenuItem_Save(object sender, RoutedEventArgs e)
         {
             if (_dataService == null) return;
@@ -244,12 +193,21 @@ namespace DialogueBuilderWpf
             }
         }
 
-        /// <summary>
-        /// Exports unreal compatible csv file that can be imported to data table.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void MenuItem_ExportUnrealCSV(object sender, RoutedEventArgs e)
+        {
+            if (_dataService == null) return;
+            try
+            {
+                _dataService.Save(new UeCsvSerilizer());
+                MessageBox.Show("Exported succesfully", "Exported!", MessageBoxButton.OK);
+            }
+            catch (System.Exception exception)
+            {
+                MessageBox.Show(exception.Message,  "Failed to save data.", MessageBoxButton.OK);
+            }
+        }
+
+        private void MenuItem_ExportCsv(object sender, RoutedEventArgs e)
         {
             if (_dataService == null) return;
             try
@@ -259,15 +217,10 @@ namespace DialogueBuilderWpf
             }
             catch (System.Exception exception)
             {
-                MessageBox.Show(exception.Message,  "Failed to save data.", MessageBoxButton.OK);
+                MessageBox.Show(exception.Message, "Failed to save data.", MessageBoxButton.OK);
             }
         }
 
-        /// <summary>
-        /// Save and quit application
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void MenuItem_QuitSave(object sender, RoutedEventArgs e)
         {
             if (_dataService == null) return;
@@ -283,18 +236,8 @@ namespace DialogueBuilderWpf
             }
         }
 
-        /// <summary>
-        /// Exit without saving
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void MenuItem_Quit(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
 
-        /// <summary>
-        /// Help menu item pressed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void MenuItem_Info(object sender, RoutedEventArgs e)
         {
 
@@ -302,17 +245,12 @@ namespace DialogueBuilderWpf
                 $"""
                 Info about project can be found at Github repo.
                 
-                http://github.com
+                https://github.com/linre-90/DialogueBuilder
 
                 """;
             MessageBox.Show(info, "Info", MessageBoxButton.OK);
         }
 
-        /// <summary>
-        /// License pop up
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void MenuItem_License(object sender, RoutedEventArgs e)
         {
             try
@@ -326,9 +264,6 @@ namespace DialogueBuilderWpf
             }
         }
 
-        /// <summary>
-        /// Re draw whole node editor.
-        /// </summary>
         private void ReDrawNodeEditor()
         {
             nodeEditor.Children.Clear();
@@ -351,10 +286,6 @@ namespace DialogueBuilderWpf
             }
         }
 
-        /// <summary>
-        /// Updates properties window fields.
-        /// </summary>
-        /// <param name="node"></param>
         private void UpdatePropertiesWindow(Node? node)
         {
             if (node != null)

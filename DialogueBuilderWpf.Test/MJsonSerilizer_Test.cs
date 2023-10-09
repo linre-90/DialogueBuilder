@@ -16,8 +16,8 @@ namespace DialogueBuilderWpf.Test
             MJsonSerializer mJsonSerializer = new MJsonSerializer();
             mJsonSerializer.Serialize(projectDir, projectName, tree.Root);
 
-            Assert.IsTrue(File.Exists(Path.Join(MFileWriter.BuildJsonFilePath(projectDir, projectName))));
-            string content = File.ReadAllText(MFileWriter.BuildJsonFilePath(projectDir, projectName));
+            Assert.IsTrue(File.Exists(Path.Join(DataService.GetProjectJsonFilePath(projectDir, projectName))));
+            string content = File.ReadAllText(DataService.GetProjectJsonFilePath(projectDir, projectName));
 
             Assert.IsTrue(content.Contains("{\"UiID\":\"root\","));
             Assert.IsTrue(content.Contains("{\"UiID\":\"d2\","));
@@ -27,7 +27,7 @@ namespace DialogueBuilderWpf.Test
             Assert.IsTrue(content.Contains("\"NextOptions\":[]"));
 
 
-            File.Delete(MFileWriter.BuildJsonFilePath(projectDir, projectName));
+            File.Delete(DataService.GetProjectJsonFilePath(projectDir, projectName));
         }
 
         [TestMethod]
@@ -37,7 +37,7 @@ namespace DialogueBuilderWpf.Test
             MJsonSerializer mJsonSerializer = new MJsonSerializer();
             mJsonSerializer.Serialize(projectDir, projectName, tree.Root);
 
-            DialogueTree treeFromFile = mJsonSerializer.DeserializeProject(MFileWriter.BuildJsonFilePath(projectDir, projectName));
+            DialogueTree treeFromFile = mJsonSerializer.DeserializeProject(DataService.GetProjectJsonFilePath(projectDir, projectName));
 
             Assert.AreEqual(tree.Root.ChildrenListAsString().Length, treeFromFile.Root.ChildrenListAsString().Length);
             Assert.IsNotNull(treeFromFile.FindNodeById("f2"));
@@ -45,7 +45,7 @@ namespace DialogueBuilderWpf.Test
             Assert.IsNotNull(treeFromFile.FindNodeById("b1"));
             Assert.IsNotNull(treeFromFile.FindNodeById("a1"));
 
-            File.Delete(MFileWriter.BuildJsonFilePath(projectDir, projectName));
+            File.Delete(DataService.GetProjectJsonFilePath(projectDir, projectName));
         }
     }
 }

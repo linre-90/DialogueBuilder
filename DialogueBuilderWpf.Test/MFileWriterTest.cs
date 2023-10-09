@@ -1,4 +1,5 @@
-﻿using DialogueBuilderWpf.src.serializer;
+﻿using DialogueBuilderWpf.src;
+using DialogueBuilderWpf.src.serializer;
 using System.Text.Json;
 
 namespace DialogueBuilderWpf.Test
@@ -13,8 +14,8 @@ namespace DialogueBuilderWpf.Test
         {
             
             MFileWriter.WriteJsonFile(JsonSerializer.Serialize("asd"), Directory.GetCurrentDirectory(), projectName);
-            Assert.IsTrue(File.Exists(MFileWriter.BuildJsonFilePath(Directory.GetCurrentDirectory(), projectName)));
-            File.Delete(MFileWriter.BuildJsonFilePath(Directory.GetCurrentDirectory(), projectName));
+            Assert.IsTrue(File.Exists(DataService.GetProjectJsonFilePath(Directory.GetCurrentDirectory(), projectName)));
+            File.Delete(DataService.GetProjectJsonFilePath(Directory.GetCurrentDirectory(), projectName));
         }
 
         [TestMethod]
@@ -24,7 +25,7 @@ namespace DialogueBuilderWpf.Test
                 new List<string>() { "asdasd"}, 
                 new List<string>() { "asdasd" }, 
                 Directory.GetCurrentDirectory(), 
-                projectName);
+                projectName, "UE");
 
             Assert.IsTrue(File.Exists(Path.Join(Directory.GetCurrentDirectory(), "export", $"UE_{projectName}_relation.csv")));
             Assert.IsTrue(File.Exists(Path.Join(Directory.GetCurrentDirectory(), "export", $"UE_{projectName}_data.csv")));

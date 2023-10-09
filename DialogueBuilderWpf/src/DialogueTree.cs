@@ -2,9 +2,7 @@
 
 namespace DialogueBuilderWpf.src
 {
-    /// <summary>
-    /// Container that holds whole conversation tree data structure.
-    /// </summary>
+
     internal class DialogueTree
     {
         public Node Root { get; private set; }
@@ -33,16 +31,9 @@ namespace DialogueBuilderWpf.src
             public Node? node;
         }
 
-        /// <summary>
-        /// Adds empty "unnamed" node to children.
-        /// </summary>
-        /// <param name="target"></param>
         public void AddNode(Node target) => target.NextOptions.Add(new Node("unnamed"));
 
-        /// <summary>
-        /// Removes targeted node and everything below it to maintain correct structure.
-        /// </summary>
-        /// <param name="target"></param>
+
         public void RemoveNodeBranch(Node target)
         {
             RecursionOutParentChild result = new RecursionOutParentChild();
@@ -72,10 +63,7 @@ namespace DialogueBuilderWpf.src
             }
         }
 
-        /// <summary>
-        /// Get children ui ids
-        /// </summary>
-        /// <param name="parentId"></param>
+
         public List<string> GetNodeChildrenUIiDS(string parentId)
         {
             RecursionOutChildUiIDS result = new RecursionOutChildUiIDS();
@@ -102,11 +90,6 @@ namespace DialogueBuilderWpf.src
             }
         }
 
-        /// <summary>
-        /// Find node by UIid.
-        /// </summary>
-        /// <param name="UiID"></param>
-        /// <returns></returns>
         public Node? FindNodeById(string UiID)
         {
             RecursionOutSingleNode result = new RecursionOutSingleNode();
