@@ -21,7 +21,11 @@ namespace DialogueBuilderWpf.ui
         readonly Brush _LineColor = new SolidColorBrush(Colors.BurlyWood);
         readonly Brush _BoxBgrColor = new SolidColorBrush(Colors.BurlyWood);
 
-
+        /// <summary>
+        /// Builds block shape to display canvas.
+        /// </summary>
+        /// <param name="UiId"></param>
+        /// <returns></returns>
         public TextBlock BuildBlock(string UiId)
         {
             TextBlock textBlock = new TextBlock();
@@ -34,6 +38,12 @@ namespace DialogueBuilderWpf.ui
             return textBlock;
         }
 
+        /// <summary>
+        /// Draws line on canvas from pos to pos.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="childPosition"></param>
+        /// <returns></returns>
         public Line BuildLineToChild(System.Drawing.Point position, System.Drawing.Point childPosition)
         {
             Line line = new Line();

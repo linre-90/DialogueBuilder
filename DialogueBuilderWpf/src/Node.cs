@@ -4,7 +4,10 @@ using System.Text.Json.Serialization;
 
 namespace DialogueBuilderWpf.src
 {
-
+    /// <summary>
+    /// Node is json serializable data storage entity that stores single dialogue in program.<br></br>
+    /// Connecting single nodes to other nodes creates tree structure that forms whole conversation.
+    /// </summary>
     internal class Node
     {
         [JsonInclude]
@@ -40,6 +43,16 @@ namespace DialogueBuilderWpf.src
             NextOptions = new List<Node>();
         }
 
+        /// <summary>
+        /// Update node values to new parameter values.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="npcText"></param>
+        /// <param name="tooltipText"></param>
+        /// <param name="effect"></param>
+        /// <param name="skillId"></param>
+        /// <param name="launchesPersuation"></param>
+        /// <returns></returns>
         public bool Update(string id, string npcText, string tooltipText, string effect, string skillId, bool launchesPersuation)
         {
             bool validEffectDirection = (effect.Equals("-1") || effect.Equals("0") || effect.Equals("1"));
@@ -62,6 +75,10 @@ namespace DialogueBuilderWpf.src
             return false;
         }
 
+        /// <summary>
+        /// Get all children that this node has in string format.
+        /// </summary>
+        /// <returns></returns>
         public string ChildrenListAsString()
         {
             StringBuilder outStrBuilder = new StringBuilder();
@@ -69,6 +86,11 @@ namespace DialogueBuilderWpf.src
             return outStrBuilder.ToString();
         }
 
+        /// <summary>
+        /// Travel all children recursively to form string representation of children.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="outStrBuilder"></param>
         private void ChildrenListAsStringRec(Node node, StringBuilder outStrBuilder)
         {
             if (node == null) return;

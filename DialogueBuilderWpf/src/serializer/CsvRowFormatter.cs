@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace DialogueBuilderWpf.src.serializer
 {
+    /// <summary>
+    /// Class provides methods for formatting tree nodes and relationships to csv row.
+    /// </summary>
     internal class CsvRowFormatter
     {
         protected void ConvertTreeToCsvRows(Node node, List<string> dataCsv, List<string> relationShipCsv)
@@ -17,6 +20,11 @@ namespace DialogueBuilderWpf.src.serializer
             }
         }
 
+        /// <summary>
+        /// Format node to csv row. Replaces ',' with ';' when csv is used.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         protected string FormatNodeDataRow(Node node)
         {
             // encodes "," to ";" is expected.
@@ -27,7 +35,12 @@ namespace DialogueBuilderWpf.src.serializer
                 $",{node.SkillID}" +
                 $",{node.InvokeActivity}";
         }
-
+        /// <summary>
+        /// Format node children to csv row. Replaces ',' with ';' when csv is used.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="child"></param>
+        /// <returns></returns>
         protected string FormatNodeRelationshipRow(Node parent, Node child)
         {
             // encodes "," to ";" is expected.

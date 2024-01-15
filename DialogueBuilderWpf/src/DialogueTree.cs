@@ -2,7 +2,9 @@
 
 namespace DialogueBuilderWpf.src
 {
-
+    /// <summary>
+    /// Dialogue tree is wrapper to use, query and alternate managed nodes.
+    /// </summary>
     internal class DialogueTree
     {
         public Node Root { get; private set; }
@@ -31,9 +33,16 @@ namespace DialogueBuilderWpf.src
             public Node? node;
         }
 
+        /// <summary>
+        /// Add new node to the tree.
+        /// </summary>
+        /// <param name="target"></param>
         public void AddNode(Node target) => target.NextOptions.Add(new Node("unnamed"));
 
-
+        /// <summary>
+        /// Remove node and all children nodes.
+        /// </summary>
+        /// <param name="target"></param>
         public void RemoveNodeBranch(Node target)
         {
             RecursionOutParentChild result = new RecursionOutParentChild();
@@ -44,6 +53,13 @@ namespace DialogueBuilderWpf.src
             }
         }
 
+        /// <summary>
+        /// Find delete target parent in tree. Recursive.
+        /// </summary>
+        /// <param name="deleteTarget"></param>
+        /// <param name="current"></param>
+        /// <param name="currentParent"></param>
+        /// <param name="nodeDelete"></param>
         private void RemoveNodeBranchRec(Node deleteTarget, Node current, Node currentParent, RecursionOutParentChild nodeDelete)
         {
             if (current == null) return;
@@ -63,7 +79,11 @@ namespace DialogueBuilderWpf.src
             }
         }
 
-
+        /// <summary>
+        /// Get all children ids as list.
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <returns></returns>
         public List<string> GetNodeChildrenUIiDS(string parentId)
         {
             RecursionOutChildUiIDS result = new RecursionOutChildUiIDS();
@@ -71,6 +91,12 @@ namespace DialogueBuilderWpf.src
             return result.childrenUiIDs;
         }
 
+        /// <summary>
+        /// Recursive method to find node children ids.
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <param name="rootNode"></param>
+        /// <param name="childUiIDs"></param>
         private void GetNodeChildrenUIiDSRec(string parentId, Node rootNode, RecursionOutChildUiIDS childUiIDs)
         {
             if (rootNode == null) return;
@@ -90,6 +116,11 @@ namespace DialogueBuilderWpf.src
             }
         }
 
+        /// <summary>
+        /// Find node from the tree based on id.
+        /// </summary>
+        /// <param name="UiID"></param>
+        /// <returns></returns>
         public Node? FindNodeById(string UiID)
         {
             RecursionOutSingleNode result = new RecursionOutSingleNode();
@@ -97,6 +128,12 @@ namespace DialogueBuilderWpf.src
             return result.node;
         }
 
+        /// <summary>
+        /// Recursively find node from the tree by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="node"></param>
+        /// <param name="outNode"></param>
         private void FindNodeByIdRec(string id, Node node, RecursionOutSingleNode outNode)
         {
             if (node == null) return;

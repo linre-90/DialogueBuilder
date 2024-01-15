@@ -3,7 +3,9 @@ using System.Collections.Generic;
 
 namespace DialogueBuilderWpf.src.serializer
 {
-
+    /// <summary>
+    /// Serializer that saves data in standart csv format to disk.
+    /// </summary>
     internal class CsvSerilizer: CsvRowFormatter, ISerializer
     {
         public void Serialize(string projectDir, string projectName , Node? data)

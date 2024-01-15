@@ -6,16 +6,24 @@ namespace DialogueBuilderWpf.src
 {
     /// <summary>
     /// Class acts as fasade for ui to modify state and to subscribe events about state changes (DataChangeEvent).
-    /// Exceptions will bubble up and service user is responsible to handle them.
-    /// <seealso cref="DataChangedEventHandler"/>
+    /// Exceptions will bubble up and service user is responsible to handle them. <br></br>
+    /// This should be used to interact with program "backend" located in src folder.
     /// </summary>
     internal class DataService
     {
+        /// <summary>
+        /// Data and project state.
+        /// </summary>
         public DialogueTree? Data { get; private set; }
 
+        /// <summary>
+        /// Directory where project is stored on disk.
+        /// </summary>
         public string? ProjectDir { get; private set; }
 
-        /* ProjectName = opened directory, value is extracted from DirPath in initialize methods. */
+        /// <summary>
+        /// ProjectName = opened directory, value is extracted from DirPath in initialize methods.
+        /// </summary>
         public string? ProjectName { get; private set; }
 
 
@@ -28,6 +36,10 @@ namespace DialogueBuilderWpf.src
             return Path.Combine(projectDir, $"{projectName}.json");
         }
 
+        /// <summary>
+        /// Initializes new empty project.
+        /// </summary>
+        /// <param name="folderPath"></param>
         public void InitializeNewProject(string folderPath)
         {
             this.Data = new DialogueTree(new Node("root"));
@@ -36,7 +48,10 @@ namespace DialogueBuilderWpf.src
             DataChangeEvent?.Invoke();
         }
 
-
+        /// <summary>
+        /// Load saved project from file.
+        /// </summary>
+        /// <param name="folderPath"></param>
         public void InitializeFromFile(string folderPath)
         {
             this.ProjectDir = folderPath;
@@ -46,13 +61,30 @@ namespace DialogueBuilderWpf.src
             DataChangeEvent?.Invoke();
         }
 
+        /// <summary>
+        /// Get all children uiids as list.
+        /// </summary>
+        /// <param name="parentUiID"></param>
+        /// <returns></returns>
         public List<string>? GetChildrenUiIds(string parentUiID)  => Data!.GetNodeChildrenUIiDS(parentUiID);
 
-
+        /// <summary>
+        /// Search <see cref="Data"/> for node with id.
+        /// </summary>
+        /// <param name="nodeUiID"></param>
+        /// <returns></returns>
         public Node? FindNodeById(string nodeUiID) => Data!.FindNodeById(nodeUiID);
 
+        /// <summary>
+        /// Save project to disk.
+        /// </summary>
+        /// <param name="serializer"></param>
         public void Save(ISerializer serializer) => serializer.Serialize(ProjectDir!, ProjectName!, Data!.Root);
 
+        /// <summary>
+        /// Add new node to <see cref="Data"/> tree.
+        /// </summary>
+        /// <param name="parentUiID"></param>
         public void AddNewNodeToParent(string parentUiID)
         {
             Node? node = FindNodeById(parentUiID);
@@ -63,6 +95,10 @@ namespace DialogueBuilderWpf.src
             }
         }
 
+        /// <summary>
+        /// Delete node and children from <see cref="Data"/>
+        /// </summary>
+        /// <param name="targetUiID"></param>
         public void DeleteNodeBranch(string targetUiID)
         {
             Node? node = FindNodeById(targetUiID);
@@ -73,6 +109,17 @@ namespace DialogueBuilderWpf.src
             }
         }
 
+        /// <summary>
+        /// Update single node values.
+        /// </summary>
+        /// <param name="targetNodeUiID"></param>
+        /// <param name="id"></param>
+        /// <param name="npcText"></param>
+        /// <param name="tooltipText"></param>
+        /// <param name="effect"></param>
+        /// <param name="skillId"></param>
+        /// <param name="launchesPersuation"></param>
+        /// <returns></returns>
         public bool UpdateNodeValues(string targetNodeUiID, string id, string npcText, string tooltipText, string effect, string skillId, bool launchesPersuation)
         {
             Node? node = FindNodeById(targetNodeUiID);

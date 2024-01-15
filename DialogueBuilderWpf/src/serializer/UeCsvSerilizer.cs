@@ -3,7 +3,10 @@ using System.Collections.Generic;
 
 namespace DialogueBuilderWpf.src.serializer
 {
-
+    /// <summary>
+    ///  Class provides unreal engine specialized csv serializer. 
+    ///  <br></br>Serialized files can be used with unreal data assets.
+    /// </summary>
     internal class UeCsvSerilizer: CsvRowFormatter, ISerializer
     {
 
